@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct FlagsExplorerView: View {
+    @State var viewModel: FlagsExplorerViewModel = FlagsExplorerViewModel()
+    
     var body: some View {
         ZStack {
             LinearGradient(
@@ -33,7 +35,31 @@ struct FlagsExplorerView: View {
                 
                 Spacer()
                 
-                FlagsExplorerCard(name: "Europe", desctiption: "Diverse cultures and vast landscapes, symbolized by flags with stars, stripes and vibrant motifs.", isSelected: true)
+                ZStack {
+                    ForEach(viewModel.continents.indices, id: \.self) { index in
+                        let xOffset = CGFloat(index - viewModel.selectedCard) * 220 + viewModel.dragOffset
+                        let scale = viewModel.selectedCard == index ? 1.2 : 0.8
+                        let opacity = viewModel.selectedCard == index ? 1.0 : 0.8
+                        
+                        FlagsExplorerCard(
+                            name: viewModel.continents[index].name,
+                            description: viewModel.continents[index].description,
+                            isSelected: true
+                        )
+                        .scaleEffect(scale)
+                        .opacity(opacity)
+                        .offset(x: xOffset, y: 0)
+                    }
+                }
+                .gesture(
+                    DragGesture()
+                        .onEnded({ value in
+                            withAnimation {
+                                viewModel.updateSelectedCard(with: value)
+                            }
+
+                        })
+                )
                 
                 Spacer()
             }
@@ -43,7 +69,7 @@ struct FlagsExplorerView: View {
 
 struct FlagsExplorerCard: View {
     let name: String
-    let desctiption: String
+    let description: String
     let isSelected: Bool
     
     var body: some View {
@@ -68,7 +94,7 @@ struct FlagsExplorerCard: View {
                     .foregroundStyle(.bg1)
                     .shadow(radius: 10)
                 
-                Text(desctiption)
+                Text(description)
                     .font(.system(size: 12))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 8)

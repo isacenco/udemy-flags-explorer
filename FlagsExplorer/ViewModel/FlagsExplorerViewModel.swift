@@ -5,7 +5,7 @@
 //  Created by Ghenadie Isacenco on 6/11/25.
 //
 
-import Foundation
+import SwiftUI
 
 @Observable
 class FlagsExplorerViewModel {
@@ -19,4 +19,14 @@ class FlagsExplorerViewModel {
     
     var selectedCard: Int = 2
     var dragOffset: CGFloat = 0
+    
+    func updateSelectedCard(with value: DragGesture.Value) {
+        let threshold: CGFloat = 50
+        
+        if value.translation.width > threshold {
+            selectedCard = max(0, selectedCard - 1)
+        } else if value.translation.width < -threshold {
+            selectedCard = min(continents.count - 1, selectedCard + 1)
+        }
+    }
 }
