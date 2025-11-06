@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//@MainActor
 struct FlagsExplorerView: View {
     @State var viewModel: FlagsExplorerViewModel = FlagsExplorerViewModel()
     
