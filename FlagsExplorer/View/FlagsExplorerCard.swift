@@ -43,7 +43,7 @@ struct FlagsExplorerCard: View {
                     
                 if isSelected {
                     NavigationLink {
-                        FlagsDetailsView()
+                        FlagsDetailsView(name: name)
                     } label: {
                         ZStack {
                             Circle()
