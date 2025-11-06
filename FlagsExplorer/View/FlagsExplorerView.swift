@@ -73,6 +73,7 @@ struct FlagsExplorerCard: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 8)
                     .foregroundStyle(.gray)
+                    .frame(width: 200)
                     
                 if isSelected {
                     NavigationLink {
@@ -109,7 +110,7 @@ struct FlagsExplorerCard: View {
             }
             .offset(y: isSelected ? -130 : -230)
         }
-        .frame(width: 200)
+        //.frame(width: 200)
     }
 }
 
