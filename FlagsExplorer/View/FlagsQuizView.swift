@@ -15,7 +15,6 @@ struct FlagsQuizView: View {
     var name: String = "Europe"
     var countries: [CountryElement] = []
     
-    
     fileprivate func BackButton() -> ToolbarItem<(), Button<some View>> {
         return ToolbarItem(placement: .navigationBarLeading) {
             Button {
@@ -38,13 +37,16 @@ struct FlagsQuizView: View {
             
             
             VStack {
-                if let question = viewModel.currentQuestion {
+                if viewModel.quizCompleted {
+                    QuizCompletedView(viewModel: $viewModel, countries: countries)
+                } else if let question = viewModel.currentQuestion {
                     QuizView(viewModel: $viewModel, question: question)
                 }
             }.task {
                 viewModel.prepareQuestions(from: countries)
             }
         }
+        .navigationBarBackButtonHidden()
         .toolbar {
             if #available(iOS 26, *) {
                 BackButton()
@@ -63,70 +65,9 @@ struct FlagsQuizView: View {
     }
 }
 
-struct QuizView: View {
-    
-    @Binding var viewModel: FlagsQuizViewModel
-    
-    var question: QuizQuestion
-    
-    var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            ProgressView(value: Double(viewModel.currentQuestionIndex + 1), total: 10)
-                .progressViewStyle(LinearProgressViewStyle())
-                .tint(.white)
-                .padding(.horizontal)
-            
-            Spacer()
-            
-            AsyncImage(url: question.flagUrl) { phase in
-                switch phase {
-                case .empty:
-                    EmptyView()
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 200)
-                case .failure:
-                    Image(systemName: "flag.slash")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 200)
-                        .foregroundColor(.gray)
-                @unknown default:
-                    EmptyView()
-                }
-            }
-            .padding()
 
-            Spacer()
-            
-            ForEach(0..<4, id: \.self) { index in
-                Button {
-                    viewModel.checkAnswer(index: index)
-                } label: {
-                    Text(question.options[index])
-                        .font(.title3)
-                        .bold()
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(viewModel.buttonColor(for: index))
-                        .foregroundColor(.black)
-                        .cornerRadius(20)
-                        .shadow(radius: 10)
-                }
-                .disabled(viewModel.isAnswered)
-            }
-            .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
 
-            Spacer()
-        }
-        .background(.ultraThinMaterial.opacity(0.7))
-        .cornerRadius(20)
-        .padding(30)
-    }
-}
+
 
 #Preview {
     NavigationView {

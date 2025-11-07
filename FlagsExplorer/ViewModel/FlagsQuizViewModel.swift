@@ -59,6 +59,15 @@ class FlagsQuizViewModel {
         }
     }
     
+    func resetQuiz(countries: [CountryElement]) {
+        currentQuestionIndex = 0
+        score = 0
+        quizCompleted = false
+        questions = []
+        
+        prepareQuestions(from: countries)
+    }
+    
     func buttonColor(for index: Int) -> Color {
         guard isAnswered, let question = currentQuestion else { return .white }
         
