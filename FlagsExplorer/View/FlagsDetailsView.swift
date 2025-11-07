@@ -69,7 +69,7 @@ struct FlagsDetailsView: View {
                 }
                 
                 NavigationLink {
-                    
+                    FlagsQuizView(name: name, countries: flagsDetailViewModel.countries)
                 } label: {
                     VStack {
                         Spacer()
